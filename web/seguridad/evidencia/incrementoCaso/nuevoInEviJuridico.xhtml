@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <p:dialog id="dlgNuevoIE" header="Incremento de Evidencia  " widgetVar="wdlgincrementoE" 
+              modal="true" closable="true" resizable="false" height="460" width="660"
+              showEffect="explode" hideEffect="fold" appendTo="@(body)"> 
+        <center> 
+            <h:form id="frmInEvidencia" enctype="multipart/form-data">
+                <p:ajaxStatus onstart="dlgStatus.show();" oncomplete="dlgStatus.hide();"/>
+                <p:messages id="messages" autoUpdate="true"/> 
+                <p:panel id="caso" header="Evidencia" style=" width:600px;">
+                    <p:panelGrid id="pngcaso" columns="4" >
+                        <h:outputText value="Codigo de Caso:" style="width:400px "/>
+                        <p:inputText id="codIns" value="#{incrmentoEvidencias_JuridicosControladores.evidenciaSel.codigo_caso.codigo_institucional}" style="width:150px"/>
+                        <h:outputText value="Titulo de Evidecencia:" style="width:400px "/>
+                        <p:inputText id="tipoCaso" value="#{incrmentoEvidencias_JuridicosControladores.evidenciaSel.codigo_detalle_evidencia.titulo}" style="width:150px"/>
+                        <h:outputText value="Responsable de Recojida:" style="width:400px "/>
+                        <p:inputText id="dependencia" value="#{incrmentoEvidencias_JuridicosControladores.evidenciaSel.codigo_detalle_evidencia.nombre_responsable_reco}" style="width:150px"/>
+                        <h:outputText value="Fecha de Registro:" style="width:400px "/>
+                        <p:inputText id="provincia" value="#{incrmentoEvidencias_JuridicosControladores.evidenciaSel.fecha_registro}" style="width:150px"/>
+                    </p:panelGrid> 
+                </p:panel>
+            </h:form>
+        </center>
+        <p:separator>
+
+        </p:separator>
+        <h:form id="frmInsertarIncrementoDocumentos">
+
+            <p:panelGrid id="pdgGuardar" columns="2" > 
+                <p:outputLabel value="Tema del Parte:"/>
+                <p:inputTextarea id ="txtTituloIncrementoArchivo" rows="5" cols="60" value="#{incrmentoEvidencias_JuridicosControladores.objInEvJu.tema}" queryDelay="700" minQueryLength="4"
+                                 title="ej: Analisis de ejemplos en Unach" required="true" requiredMessage="Ingrese el Tema del Documento"/>
+
+                <p:outputLabel value="Parte:"/>
+                <p:inputText id="txtParteIncremento" value="#{incrmentoEvidencias_JuridicosControladores.objInEvJu.parte}"
+                             title="ej: Part I" required="true" requiredMessage="Ingrese parte de incremento"/>
+                <p:outputLabel value="Observaciones:"/>
+                <p:inputTextarea id ="txtObservaciones" rows="3" cols="60" value="#{incrmentoEvidencias_JuridicosControladores.objInEvJu.detalle}" queryDelay="700" minQueryLength="4"
+                                 title="ej: Analisis de ejemplos" required="true" requiredMessage="Ingrese una Observación"/>
+                
+                <p:outputLabel value="Ruta"/>
+                <p:inputText id="txtRutaIncrementoArchivos" value="#{incrmentoEvidencias_JuridicosControladores.objInEvJu.path}" style="width:250px"
+                             title="ej: /ejemplo.pdf" required="true" requiredMessage="Ingrese la Ruta del Documento" disabled="true"/>
+
+
+
+                <p:outputLabel value="Subir Archivo"/>                                                                   
+                <p:fileUpload fileUploadListener="#{incrmentoEvidencias_JuridicosControladores.cargarIncrementoArchivos}"
+                              allowTypes="/(\.|\/)(pdf|doc?x|odt)$/" label="Abrir" mode="advanced"  
+                              update="txtRutaIncrementoArchivos" uploadLabel="Subir" cancelLabel="Cancelar"   
+                              value="#{incrmentoEvidencias_JuridicosControladores.archivoIncrementoArchivos}"
+                              required="true" requiredMessage="Cargar Archivo!!" />
+            </p:panelGrid>
+
+            <p:panelGrid columns="2" style="text-align: center;">
+                <p:commandButton value="Aceptar" action="#{incrmentoEvidencias_JuridicosControladores.insertarIncrementoEvidecniaJ()}"
+                                 update=":frmInsertarIncrementoDocumentos" 
+                                 process="@this txtTituloIncrementoArchivo txtParteIncremento txtObservaciones txtRutaIncrementoArchivos"/>
+                <p:commandButton value="Cancelar" onclick="wdlgincrementoE.hide();"/>
+            </p:panelGrid> 
+        </h:form>
+
+    </p:dialog>
+
+    <p:dialog modal="true" widgetVar="dlgStatus" header="Procesando" draggable="false" closable="false" 
+              resizable="false"> 
+        <p:graphicImage value="/resources/images/ajaxloadingbar.gif" />  
+    </p:dialog>
+
+</ui:composition>
